@@ -6,16 +6,18 @@ df = pd.read_csv("current_catalog.csv")
 tudo = []
 colunas = []
 
-list_of_columns = df.columns.tolist()
+list_of_columns = df.select_dtypes(include='number')
 for column in list_of_columns:
     colunas.append(column)
-    colunas.append(df[column].duplicated().sum())
+    colunas.append(df[column].std())
     tudo.append(colunas)
     colunas = []
 
-#mostra numeros repitidos por coluna
+#esse for mostra as colunas que tem variabilidade numericas.
 for i in range(len(tudo)):
-    print(f"{tudo[i][0]}: {tudo[i][1]}")
+    # como o ID é unico por satélite, ele não tem variabilidade, por isso o if.
+    if i > 0:
+        print(f"{tudo[i][0]}: {tudo[i][1]}")
 
 #grafico de barras que indica a quantidade de satélites por país
 nomes = df["country"].value_counts()[:20].index
